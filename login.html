@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Entrar — AAC Assistência Técnica</title>
+<meta name="description" content="Entre na sua conta ou crie um cadastro na AAC Assistência Técnica Especializada.">
+<link rel="stylesheet" href="css/site.css">
+<link rel="stylesheet" href="css/loja.css">
+<link rel="icon" href="data:image/svg+xml,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'&gt;&lt;text y='.9em' font-size='90'&gt;👤&lt;/text&gt;&lt;/svg&gt;">
+</head>
+<body>
+
+<!-- ===== Cabeçalho ===== -->
+<header class="cabecalho">
+  <div class="container cabecalho-conteudo">
+    <a href="index.html" class="marca">
+      <span class="logo-escudo">AAC</span>
+      <span class="marca-texto">
+        <strong>AAC Assistência Técnica</strong>
+        <small>ESPECIALIZADA</small>
+      </span>
+    </a>
+  </div>
+</header>
+
+<main class="conta-wrap">
+  <div class="conta-card">
+    <h1>Bem-vindo! 👋</h1>
+    <p class="sub">Entre na sua conta ou crie um cadastro grátis</p>
+
+    <div class="conta-abas">
+      <button id="aba-entrar" class="ativa">Entrar</button>
+      <button id="aba-cadastrar">Criar conta</button>
+    </div>
+
+    <!-- ===== Entrar ===== -->
+    <form class="conta-form" id="form-entrar">
+      <div class="erro-msg lj-oculto" id="erro-entrar"></div>
+      <label>Usuário
+        <input name="usuario" required autocomplete="username" placeholder="seu usuário">
+      </label>
+      <label>Senha
+        <input name="senha" type="password" required autocomplete="current-password" placeholder="sua senha">
+      </label>
+      <button type="submit" class="lj-btn lj-btn-dourado" style="justify-content:center">Entrar</button>
+    </form>
+
+    <!-- ===== Criar conta ===== -->
+    <form class="conta-form lj-oculto" id="form-cadastrar">
+      <div class="erro-msg lj-oculto" id="erro-cadastrar"></div>
+      <label>Nome completo
+        <input name="nome" required autocomplete="name" placeholder="Ex.: Maria da Silva">
+      </label>
+      <label>Usuário
+        <input name="usuario" required autocomplete="username" placeholder="Ex.: maria.silva">
+      </label>
+      <label>Senha
+        <input name="senha" type="password" required minlength="4" autocomplete="new-password" placeholder="mínimo 4 caracteres">
+      </label>
+      <label>Confirmar senha
+        <input name="confirmar" type="password" required minlength="4" autocomplete="new-password" placeholder="repita a senha">
+      </label>
+      <details>
+        <summary>Sou da equipe da loja (administrador)</summary>
+        <label>Código de administrador
+          <input name="codigoAdmin" autocomplete="off" placeholder="código fornecido pela loja">
+        </label>
+      </details>
+      <button type="submit" class="lj-btn lj-btn-dourado" style="justify-content:center">Criar minha conta</button>
+    </form>
+
+    <a class="voltar" href="loja.html">← Voltar para a loja sem entrar</a>
+  </div>
+</main>
+
+<script src="js/auth.js"></script>
+<script>
+  /* Para onde ir depois de entrar: login.html?voltar=sistema ou ?voltar=loja */
+  const DESTINOS = { sistema: 'sistema.html', loja: 'loja.html', inicio: 'index.html' };
+  const voltar = new URLSearchParams(location.search).get('voltar') || 'loja';
+
+  function redirecionar(sessao) {
+    if (voltar === 'sistema' && sessao.tipo !== 'admin') {
+      mostrarErro('erro-entrar', 'O sistema de gestão é restrito aos administradores da loja. Você entrou como cliente — boas compras!');
+      setTimeout(() => location.href = DESTINOS.loja, 2600);
+      return;
+    }
+    location.href = DESTINOS[voltar] || DESTINOS.loja;
+  }
+
+  function mostrarErro(id, msg) {
+    const el = document.getElementById(id);
+    el.textContent = msg;
+    el.classList.remove('lj-oculto');
+  }
+
+  function esconderErros() {
+    document.getElementById('erro-entrar').classList.add('lj-oculto');
+    document.getElementById('erro-cadastrar').classList.add('lj-oculto');
+  }
+
+  // Se já estiver logado, não precisa entrar de novo
+  const sessaoAtual = authSessao();
+  if (sessaoAtual && !(voltar === 'sistema' && sessaoAtual.tipo !== 'admin')) {
+    location.replace(DESTINOS[voltar] || DESTINOS.loja);
+  }
+
+  // Abas
+  const abaEntrar = document.getElementById('aba-entrar');
+  const abaCadastrar = document.getElementById('aba-cadastrar');
+  const formEntrar = document.getElementById('form-entrar');
+  const formCadastrar = document.getElementById('form-cadastrar');
+
+  function trocarAba(cadastro) {
+    abaEntrar.classList.toggle('ativa', !cadastro);
+    abaCadastrar.classList.toggle('ativa', cadastro);
+    formEntrar.classList.toggle('lj-oculto', cadastro);
+    formCadastrar.classList.toggle('lj-oculto', !cadastro);
+    esconderErros();
+  }
+  abaEntrar.onclick = () => trocarAba(false);
+  abaCadastrar.onclick = () => trocarAba(true);
+
+  // Entrar
+  formEntrar.onsubmit = async (e) => {
+    e.preventDefault();
+    esconderErros();
+    const f = new FormData(formEntrar);
+    try {
+      const sessao = await authEntrar(f.get('usuario'), f.get('senha'));
+      redirecionar(sessao);
+    } catch (err) {
+      mostrarErro('erro-entrar', err.message);
+    }
+  };
+
+  // Criar conta
+  formCadastrar.onsubmit = async (e) => {
+    e.preventDefault();
+    esconderErros();
+    const f = new FormData(formCadastrar);
+    if (f.get('senha') !== f.get('confirmar')) {
+      mostrarErro('erro-cadastrar', 'As senhas não conferem. Digite a mesma senha nos dois campos.');
+      return;
+    }
+    try {
+      const sessao = await authCadastrar({
+        nome: f.get('nome'),
+        usuario: f.get('usuario'),
+        senha: f.get('senha'),
+        codigoAdmin: f.get('codigoAdmin'),
+      });
+      redirecionar(sessao);
+    } catch (err) {
+      mostrarErro('erro-cadastrar', err.message);
+    }
+  };
+</script>
+</body>
+</html>

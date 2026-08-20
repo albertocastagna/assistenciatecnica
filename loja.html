@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loja — AAC Assistência Técnica Especializada</title>
+<meta name="description" content="Loja virtual da AAC Assistência Técnica: celulares, periféricos, fones, carregadores e acessórios em São José dos Pinhais - PR.">
+<link rel="stylesheet" href="css/site.css">
+<link rel="stylesheet" href="css/loja.css">
+<link rel="icon" href="data:image/svg+xml,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'&gt;&lt;text y='.9em' font-size='90'&gt;🛍️&lt;/text&gt;&lt;/svg&gt;">
+</head>
+<body>
+
+<!-- ===== Cabeçalho ===== -->
+<header class="cabecalho">
+  <div class="container cabecalho-conteudo">
+    <a href="index.html" class="marca">
+      <span class="logo-escudo">AAC</span>
+      <span class="marca-texto">
+        <strong>AAC Assistência Técnica</strong>
+        <small>ESPECIALIZADA</small>
+      </span>
+    </a>
+    <nav class="menu" id="menu">
+      <a href="index.html">Início</a>
+      <a href="index.html#servicos">Serviços</a>
+      <a href="loja.html">Loja</a>
+      <a href="index.html#contato">Contato</a>
+    </nav>
+    <div class="sessao-area" id="sessao-area"></div>
+    <button class="btn-menu-mobile" id="btn-menu-mobile" aria-label="Abrir menu">☰</button>
+  </div>
+</header>
+
+<!-- ===== Loja ===== -->
+<main class="container" style="padding-bottom:80px">
+  <div class="loja-cabecalho">
+    <h1>🛍️ Nossa <span class="dourado">Loja</span></h1>
+    <p>Celulares, periféricos e acessórios com o melhor preço de São José dos Pinhais</p>
+  </div>
+
+  <!-- Barra do administrador (aparece só para admin logado) -->
+  <div class="admin-barra lj-oculto" id="admin-barra"></div>
+
+  <div class="loja-barra">
+    <input type="search" id="busca-loja" placeholder="🔍 Buscar produto por nome, marca ou descrição...">
+  </div>
+  <div class="chips-categorias" id="chips-categorias"></div>
+
+  <div class="grade-loja" id="grade-loja"></div>
+
+  <p class="texto-centro" style="margin-top:40px;color:var(--texto-suave);font-size:13.5px">
+    💡 Os preços podem variar. Reserve pelo carrinho ou confirme a disponibilidade pelo WhatsApp.
+  </p>
+</main>
+
+<!-- ===== Rodapé ===== -->
+<footer class="rodape">
+  <div class="container rodape-conteudo">
+    <p>Rua Tavares de Lyra, 3918 - Iná, São José dos Pinhais - PR · (41) 98459-0345</p>
+    <div class="rodape-redes">
+      <a href="https://wa.me/5541984590345" target="_blank" rel="noopener">WhatsApp</a> ·
+      <a href="https://www.instagram.com/aaceletronicos/" target="_blank" rel="noopener">Instagram</a> ·
+      <a href="index.html">Voltar ao site</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ===== Carrinho ===== -->
+<button class="carrinho-flutuante" id="btn-carrinho" style="display:none">
+  🛒 Carrinho <span class="badge-qtd" id="carrinho-qtd">0</span>
+</button>
+
+<aside class="carrinho-painel" id="painel-carrinho">
+  <header>
+    <span>🛒 Meu carrinho</span>
+    <button id="btn-fechar-carrinho" title="Fechar">✕</button>
+  </header>
+  <div class="carrinho-itens" id="carrinho-itens"></div>
+  <div class="carrinho-rodape lj-oculto" id="carrinho-rodape">
+    <div class="carrinho-total"><span>Total</span><span id="carrinho-total-valor">R$ 0,00</span></div>
+    <button class="lj-btn lj-btn-verde" id="btn-finalizar" style="justify-content:center">💬 Finalizar pedido pelo WhatsApp</button>
+    <button class="lj-btn lj-btn-sec" id="btn-limpar-carrinho" style="justify-content:center">🗑️ Esvaziar carrinho</button>
+    <small style="color:var(--texto-suave);text-align:center">
+      O pedido é enviado para o WhatsApp da loja, onde confirmamos a disponibilidade, o pagamento e a entrega/retirada.
+    </small>
+  </div>
+</aside>
+
+<!-- ===== Modal genérico ===== -->
+<div class="lj-modal-fundo lj-oculto" id="lj-modal-fundo">
+  <div class="lj-modal" id="lj-modal"></div>
+</div>
+
+<!-- ===== Lightbox ===== -->
+<div class="lj-lightbox lj-oculto" id="lj-lightbox">
+  <img id="lj-lightbox-img" alt="Foto ampliada">
+</div>
+
+<!-- ===== Notificações ===== -->
+<div class="lj-toasts" id="lj-toasts"></div>
+
+<script src="js/auth.js"></script>
+<script src="js/db.js"></script>
+<script src="js/catalogo.js"></script>
+<script src="js/loja.js"></script>
+<script src="js/chatbot.js"></script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>AAC — Sistema de Gestão</title>
+<meta name="description" content="Sistema de gestão da AAC Assistência Técnica Especializada">
+<link rel="stylesheet" href="css/sistema.css">
+<link rel="icon" href="data:image/svg+xml,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'&gt;&lt;text y='.9em' font-size='90'&gt;🛠️&lt;/text&gt;&lt;/svg&gt;">
+</head>
+<body>
+
+<!-- Acesso restrito: só administradores logados podem usar o sistema -->
+<script src="js/auth.js"></script>
+<script>
+  if (!authEhAdmin()) location.replace('login.html?voltar=sistema');
+</script>
+
+<div class="app">
+
+  <!-- ===== Barra lateral ===== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-escudo">AAC</div>
+      <div>
+        <strong>AAC Assistência</strong>
+        <span>Técnica Especializada</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button class="nav-item ativo" data-rota="dashboard">📊 <span>Dashboard</span></button>
+      <button class="nav-item" data-rota="ordens">🛠️ <span>Ordens de Serviço</span></button>
+      <button class="nav-item" data-rota="vendas">🛒 <span>Vendas</span></button>
+      <button class="nav-item" data-rota="produtos">📦 <span>Produtos</span></button>
+      <button class="nav-item" data-rota="clientes">👥 <span>Clientes</span></button>
+      <button class="nav-item" data-rota="backup">💾 <span>Backup</span></button>
+    </nav>
+
+    <div class="sidebar-rodape">
+      <span id="usuario-logado" style="display:block;font-size:12.5px;color:#9aa3af;margin-bottom:8px"></span>
+      <a href="index.html">🌐 Ver site da loja</a>
+      <a href="loja.html">🛍️ Loja virtual</a>
+      <a href="#" id="btn-sair-sistema">🚪 Sair</a>
+    </div>
+  </aside>
+  <div class="sidebar-fundo" id="sidebar-fundo"></div>
+
+  <!-- ===== Área principal ===== -->
+  <div class="principal">
+    <header class="topo">
+      <button class="btn-menu" id="btn-menu" aria-label="Abrir menu">☰</button>
+      <h1 id="titulo-pagina">Dashboard</h1>
+      <div class="topo-acoes" id="topo-acoes"></div>
+    </header>
+
+    <main id="vista" class="vista"></main>
+  </div>
+</div>
+
+<!-- ===== Modal genérico ===== -->
+<div class="modal-fundo oculto" id="modal">
+  <div class="modal-caixa" id="modal-caixa"></div>
+</div>
+
+<!-- ===== Modal da câmera ===== -->
+<div class="modal-fundo oculto" id="modal-camera">
+  <div class="camera-caixa">
+    <video id="video-camera" autoplay playsinline muted></video>
+    <div class="camera-flash oculto" id="camera-flash"></div>
+    <div class="camera-controles">
+      <button class="btn btn-sec" id="btn-trocar-camera" title="Alternar câmera">🔄</button>
+      <button class="btn-capturar" id="btn-capturar" title="Capturar foto"></button>
+      <button class="btn btn-sec" id="btn-fechar-camera" title="Concluir">✔ Concluir</button>
+    </div>
+    <p class="camera-dica">Você pode tirar várias fotos seguidas. Toque em ✔ Concluir quando terminar.</p>
+  </div>
+</div>
+
+<!-- ===== Lightbox (ampliar foto) ===== -->
+<div class="lightbox oculto" id="lightbox">
+  <img id="lightbox-img" alt="Foto ampliada">
+</div>
+
+<!-- ===== Notificações ===== -->
+<div class="toasts" id="toasts"></div>
+
+<!-- ===== Área de impressão de recibos ===== -->
+<div id="area-impressao"></div>
+
+<script src="js/db.js"></script>
+<script src="js/app.js"></script>
+<script>
+  // Mostra quem está logado e permite sair
+  const _sessao = authSessao();
+  if (_sessao) document.getElementById('usuario-logado').textContent = '👤 ' + _sessao.nome;
+  document.getElementById('btn-sair-sistema').onclick = (e) => {
+    e.preventDefault();
+    authSair();
+    location.href = 'login.html?voltar=sistema';
+  };
+</script>
+</body>
+</html>
